@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
+from __future__ import (
+    division, print_function, unicode_literals, absolute_import)
+
 import ConfigParser
-import time
 from math import log, exp, sqrt
 from numpy import loadtxt, arange, array, dot, ones, trace, r_, c_
 from numpy.linalg import svd, norm
 from scipy.optimize import fmin_l_bfgs_b
-from _extension import gauss_transform
+
+from ._extension import gauss_transform
 
 
 def normalize(x):
@@ -237,13 +240,10 @@ def run_ini(f_config):
         model, c_m, s_m = normalize(model)
         scene, c_s, s_s = normalize(scene)
         ctrl_pts, c_c, s_c = normalize(ctrl_pts)
-    t1 = time.time()
     after_tps = run_multi_level(
             model, scene, ctrl_pts, level, scales, lambdas, iters)
     if normalize_flag == 1:
         model = denormalize(model, c_m, s_m)
         scene = denormalize(scene, c_s, s_s)
         after_tps = denormalize(after_tps, c_s, s_s)
-    t2 = time.time()
-    print("Elasped time is %s seconds" % (t2-t1))
     return model, scene, after_tps
